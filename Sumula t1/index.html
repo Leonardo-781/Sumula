@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Súmula Futsal – Preenchimento e Excel</title>
+
+  <!-- Tailwind (opcional) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SheetJS (XLSX) -->
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+
+</head>
+<body>
+  <!-- Logo no canto -->
+  <div class="brand-badge">
+    <img src="logo-fmf.png" alt="FMFutsal Logo">
+    <span class="txt">Federação Mineira de Futsal</span>
+  </div>
+
+  <div class="max-w-6xl mx-auto p-6 space-y-6">
+    <!-- Top bar com busca -->
+    <div class="flex flex-col md:flex-row items-center gap-3 md:gap-4">
+      <input id="busca" class="search-with-logo w-full md:flex-1 rounded-xl border px-3 py-2"
+             placeholder="Pesquisar (times, jogadores...)" />
+      <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900">
+        Súmula de Jogo (Futsal)
+      </h1>
+    </div>
+
+    <p class="text-sm text-slate-600">Preencha os campos e clique em “Baixar Excel”.</p>
+
+    <!-- Dados gerais -->
+    <section class="card p-5">
+      <h2 class="font-semibold text-lg mb-4">Dados da Partida</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Competição</label>
+          <input id="competicao" class="mt-1 w-full rounded-lg border px-3 py-2" placeholder="Copa Municipal" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Data</label>
+          <input id="data" type="date" class="mt-1 w-full rounded-lg border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Local</label>
+          <input id="local" class="mt-1 w-full rounded-lg border px-3 py-2" placeholder="Ginásio X" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Árbitro 1</label>
+          <input id="arbitro1" class="mt-1 w-full rounded-lg border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Árbitro 2</label>
+          <input id="arbitro2" class="mt-1 w-full rounded-lg border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Anotador/Cronometrista</label>
+          <input id="anotador" class="mt-1 w-full rounded-lg border px-3 py-2" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Equipes -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <!-- Equipe A -->
+      <div class="card p-5">
+        <h2 class="font-semibold text-lg mb-4">Equipe A</h2>
+        <div class="grid md:grid-cols-3 gap-4 mb-4">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium">Nome da Equipe A</label>
+            <input id="equipeA" class="mt-1 w-full rounded-lg border px-3 py-2" placeholder="Equipe A" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Capitão (nº)</label>
+            <input id="capitaoA" class="mt-1 w-full rounded-lg border px-3 py-2" placeholder="10" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Técnico</label>
+            <input id="tecnicoA" class="mt-1 w-full rounded-lg border px-3 py-2" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Faltas 1ºT</label>
+            <input id="faltasA1" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Faltas 2ºT</label>
+            <input id="faltasA2" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="text-left bg-slate-100">
+                <th class="p-2">#</th>
+                <th class="p-2">Nº</th>
+                <th class="p-2">Jogador</th>
+                <th class="p-2">Gols</th>
+                <th class="p-2">Cartão A</th>
+                <th class="p-2">Cartão V</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyA"></tbody>
+          </table>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button id="addJogA" class="px-3 py-2 rounded-lg border">+ Jogador</button>
+          <button id="rmJogA" class="px-3 py-2 rounded-lg border">– Jogador</button>
+        </div>
+      </div>
+
+      <!-- Equipe B -->
+      <div class="card p-5">
+        <h2 class="font-semibold text-lg mb-4">Equipe B</h2>
+        <div class="grid md:grid-cols-3 gap-4 mb-4">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium">Nome da Equipe B</label>
+            <input id="equipeB" class="mt-1 w-full rounded-lg border px-3 py-2" placeholder="Equipe B" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Capitão (nº)</label>
+            <input id="capitaoB" class="mt-1 w-full rounded-lg border px-3 py-2" placeholder="8" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Técnico</label>
+            <input id="tecnicoB" class="mt-1 w-full rounded-lg border px-3 py-2" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Faltas 1ºT</label>
+            <input id="faltasB1" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Faltas 2ºT</label>
+            <input id="faltasB2" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="text-left bg-slate-100">
+                <th class="p-2">#</th>
+                <th class="p-2">Nº</th>
+                <th class="p-2">Jogador</th>
+                <th class="p-2">Gols</th>
+                <th class="p-2">Cartão A</th>
+                <th class="p-2">Cartão V</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyB"></tbody>
+          </table>
+        </div>
+        <div class="mt-3 flex gap-2">
+          <button id="addJogB" class="px-3 py-2 rounded-lg border">+ Jogador</button>
+          <button id="rmJogB" class="px-3 py-2 rounded-lg border">– Jogador</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placar/ocorrências -->
+    <section class="card p-5">
+      <h2 class="font-semibold text-lg mb-4">Placar e Ocorrências</h2>
+      <div class="grid md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Gols Equipe A (1ºT)</label>
+          <input id="golsA1" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Gols Equipe B (1ºT)</label>
+          <input id="golsB1" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Gols Equipe A (2ºT)</label>
+          <input id="golsA2" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Gols Equipe B (2ºT)</label>
+          <input id="golsB2" type="number" min="0" class="mt-1 w-full rounded-lg border px-3 py-2" value="0" />
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="block text-sm font-medium">Observações</label>
+        <textarea id="obs" rows="3" class="mt-1 w-full rounded-lg border px-3 py-2"></textarea>
+      </div>
+    </section>
+
+    <!-- Ações -->
+    <div class="flex items-center justify-end gap-3">
+      <button id="baixar" type="button"
+              class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
+        Baixar Excel
+      </button>
+    </div>
+
+    <footer class="text-xs text-slate-600">
+      <p>MVP gerado para preenchimento rápido de súmula e exportação para Excel.</p>
+    </footer>
+  </div>
+
+  <script>
+    // ========= helpers =========
+    function addRow(tbodyId, idx){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="p-2 text-slate-500">${idx+1}</td>
+        <td class="p-2"><input class="w-20 rounded border px-2 py-1" placeholder="nº"/></td>
+        <td class="p-2"><input class="w-full rounded border px-2 py-1" placeholder="Nome do jogador"/></td>
+        <td class="p-2"><input type="number" min="0" class="w-20 rounded border px-2 py-1" value="0"/></td>
+        <td class="p-2"><input type="number" min="0" class="w-20 rounded border px-2 py-1" value="0"/></td>
+        <td class="p-2"><input type="number" min="0" class="w-20 rounded border px-2 py-1" value="0"/></td>
+      `;
+      document.getElementById(tbodyId).appendChild(tr);
+    }
+
+    function getTable(tbodyId){
+      const rows = [...document.getElementById(tbodyId).querySelectorAll('tr')];
+      return rows.map(r=>{
+        const tds = r.querySelectorAll('td input');
+        return {
+          numero: tds[0].value.trim(),
+          nome: tds[1].value.trim(),
+          gols: Number(tds[2].value || 0),
+          cartaoAmarelo: Number(tds[3].value || 0),
+          cartaoVermelho: Number(tds[4].value || 0)
+        };
+      });
+    }
+
+    function fillInitialRows(tbodyId, total=10){
+      const tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = '';
+      for (let i=0;i<total;i++) addRow(tbodyId, i);
+    }
+
+    // ========= init rows =========
+    fillInitialRows('tbodyA', 10);
+    fillInitialRows('tbodyB', 10);
+
+    // ========= buttons add/rm =========
+    const limits = {A: 14, B: 14, min: 1};
+    document.getElementById('addJogA').onclick = () => {
+      const tbody = document.getElementById('tbodyA');
+      if (tbody.children.length < limits.A) addRow('tbodyA', tbody.children.length);
+    };
+    document.getElementById('rmJogA').onclick = () => {
+      const tbody = document.getElementById('tbodyA');
+      if (tbody.children.length > limits.min) tbody.removeChild(tbody.lastElementChild);
+    };
+    document.getElementById('addJogB').onclick = () => {
+      const tbody = document.getElementById('tbodyB');
+      if (tbody.children.length < limits.B) addRow('tbodyB', tbody.children.length);
+    };
+    document.getElementById('rmJogB').onclick = () => {
+      const tbody = document.getElementById('tbodyB');
+      if (tbody.children.length > limits.min) tbody.removeChild(tbody.lastElementChild);
+    };
+
+    // ========= gerar Excel (com fallback) =========
+    const baixarBtn = document.getElementById('baixar');
+
+    baixarBtn.addEventListener('click', () => {
+      if (typeof XLSX === 'undefined') {
+        alert('Biblioteca de Excel (SheetJS) não carregou. Verifique sua internet e tente de novo.');
+        return;
+      }
+
+      // coleta geral
+      const geral = {
+        Competicao: document.getElementById('competicao').value,
+        Data: document.getElementById('data').value,
+        Local: document.getElementById('local').value,
+        Arbitro1: document.getElementById('arbitro1').value,
+        Arbitro2: document.getElementById('arbitro2').value,
+        Anotador: document.getElementById('anotador').value,
+      };
+
+      const A = {
+        Equipe: document.getElementById('equipeA').value,
+        Tecnico: document.getElementById('tecnicoA').value,
+        CapitaoN: document.getElementById('capitaoA').value,
+        Faltas1T: Number(document.getElementById('faltasA1').value || 0),
+        Faltas2T: Number(document.getElementById('faltasA2').value || 0),
+        Gols1T: Number(document.getElementById('golsA1').value || 0),
+        Gols2T: Number(document.getElementById('golsA2').value || 0),
+        Jogadores: getTable('tbodyA')
+      };
+      const B = {
+        Equipe: document.getElementById('equipeB').value,
+        Tecnico: document.getElementById('tecnicoB').value,
+        CapitaoN: document.getElementById('capitaoB').value,
+        Faltas1T: Number(document.getElementById('faltasB1').value || 0),
+        Faltas2T: Number(document.getElementById('faltasB2').value || 0),
+        Gols1T: Number(document.getElementById('golsB1').value || 0),
+        Gols2T: Number(document.getElementById('golsB2').value || 0),
+        Jogadores: getTable('tbodyB')
+      };
+
+      const obs = document.getElementById('obs').value;
+
+      // monta planilhas
+      const wb = XLSX.utils.book_new();
+
+      // Resumo
+      const resumoData = [
+        ["Competição", geral.Competicao],
+        ["Data", geral.Data],
+        ["Local", geral.Local],
+        ["Árbitro 1", geral.Arbitro1],
+        ["Árbitro 2", geral.Arbitro2],
+        ["Anotador/Cronometrista", geral.Anotador],
+        [],
+        ["Equipe A", A.Equipe],
+        ["Técnico A", A.Tecnico],
+        ["Capitão A (nº)", A.CapitaoN],
+        ["Gols A 1ºT", A.Gols1T],
+        ["Gols A 2ºT", A.Gols2T],
+        ["Faltas A 1ºT", A.Faltas1T],
+        ["Faltas A 2ºT", A.Faltas2T],
+        [],
+        ["Equipe B", B.Equipe],
+        ["Técnico B", B.Tecnico],
+        ["Capitão B (nº)", B.CapitaoN],
+        ["Gols B 1ºT", B.Gols1T],
+        ["Gols B 2ºT", B.Gols2T],
+        ["Faltas B 1ºT", B.Faltas1T],
+        ["Faltas B 2ºT", B.Faltas2T],
+        [],
+        ["Placar Final", `${A.Gols1T + A.Gols2T} x ${B.Gols1T + B.Gols2T}`],
+        [],
+        ["Observações", obs]
+      ];
+      const wsResumo = XLSX.utils.aoa_to_sheet(resumoData);
+      XLSX.utils.book_append_sheet(wb, wsResumo, "Resumo");
+
+      // Equipe A
+      const wsA = XLSX.utils.json_to_sheet(A.Jogadores.map((j, i)=>({
+        Ordem: i+1, Numero: j.numero, Jogador: j.nome,
+        Gols: j.gols, Cartao_Amarelo: j.cartaoAmarelo, Cartao_Vermelho: j.cartaoVermelho
+      })));
+      XLSX.utils.sheet_add_aoa(wsA, [
+        ["Equipe", A.Equipe], ["Tecnico", A.Tecnico], ["Capitao (nº)", A.CapitaoN], []
+      ], {origin: "A1"});
+      XLSX.utils.book_append_sheet(wb, wsA, "Equipe A");
+
+      // Equipe B
+      const wsB = XLSX.utils.json_to_sheet(B.Jogadores.map((j, i)=>({
+        Ordem: i+1, Numero: j.numero, Jogador: j.nome,
+        Gols: j.gols, Cartao_Amarelo: j.cartaoAmarelo, Cartao_Vermelho: j.cartaoVermelho
+      })));
+      XLSX.utils.sheet_add_aoa(wsB, [
+        ["Equipe", B.Equipe], ["Tecnico", B.Tecnico], ["Capitao (nº)", B.CapitaoN], []
+      ], {origin: "A1"});
+      XLSX.utils.book_append_sheet(wb, wsB, "Equipe B");
+
+      // Ocorrências
+      const ocorrencias = [
+        ["Período","Gols A","Gols B","Faltas A","Faltas B"],
+        ["1º Tempo", A.Gols1T, B.Gols1T, A.Faltas1T, B.Faltas1T],
+        ["2º Tempo", A.Gols2T, B.Gols2T, A.Faltas2T, B.Faltas2T]
+      ];
+      const wsOc = XLSX.utils.aoa_to_sheet(ocorrencias);
+      XLSX.utils.book_append_sheet(wb, wsOc, "Ocorrências");
+
+      const nomeA = (A.Equipe || "EquipeA").replace(/\s+/g,'_');
+      const nomeB = (B.Equipe || "EquipeB").replace(/\s+/g,'_');
+      const dataStr = (geral.Data || new Date().toISOString().slice(0,10));
+      const fileName = `sumula_${nomeA}_vs_${nomeB}_${dataStr}.xlsx`;
+
+      try {
+        XLSX.writeFile(wb, fileName);
+      } catch (err) {
+        // Fallback manual
+        try {
+          const arrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+          const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = fileName;
+          document.body.appendChild(a); a.click();
+          a.remove(); URL.revokeObjectURL(url);
+        } catch (e) {
+          console.error('Erro ao gerar Excel:', e);
+          alert('Não foi possível gerar o Excel. Abra o console (F12) e me envie o erro que aparece.');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
